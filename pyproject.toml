@@ -1,7 +1,7 @@
 [project]
 name = "tgm4-mod"
 version = "0.1.0"
-description = "Add your description here"
+description = "A modding tool for TGM4"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
