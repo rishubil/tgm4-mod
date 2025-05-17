@@ -7,11 +7,11 @@ from quicktex import RawTexture
 from quicktex.s3tc.bc1 import BC1Decoder, BC1Encoder, BC1Texture
 from quicktex.s3tc.bc3 import BC3Decoder, BC3Encoder, BC3Texture
 
-FORMAT_RGB = 7
+FORMAT_BGR = 7
 FORMAT_RGBA = 8
 FORMAT_BC1 = 9
-FORMAT_BC3 = 11
-FORMAT_BC3_2 = 13
+FORMAT_BC3_LIKE = 11  # only for ui/replay/icon_stop.twx and not sure about this
+FORMAT_BC3 = 13
 
 TWS_HEADER_SIZE = 0x30
 TWS_MAGIC = 0x30585754  # 'TWX0' in little-endian
@@ -51,9 +51,9 @@ class TwsFile:
 
     def to_png(self) -> bytes:
         image = None
-        if self.data_format == FORMAT_RGB:
+        if self.data_format == FORMAT_BGR:
             image = Image.frombytes(
-                "RGB", (self.width, self.height), self.image_data
+                "RGB", (self.width, self.height), self.image_data, "raw", "BGR"
             ).convert("RGBA")
         elif self.data_format == FORMAT_RGBA:
             image = Image.frombytes("RGBA", (self.width, self.height), self.image_data)
@@ -63,7 +63,7 @@ class TwsFile:
                 (self.width, self.height),
                 self.decode_bc1(self.image_data, self.width, self.height),
             )
-        elif self.data_format == FORMAT_BC3 or self.data_format == FORMAT_BC3_2:
+        elif self.data_format == FORMAT_BC3_LIKE or self.data_format == FORMAT_BC3:
             # Use the first level of mipmap data only for convert to PNG
             level0_size = (self.width // 4) * (self.height // 4) * 16
             level0_data = self.image_data[:level0_size]
@@ -83,15 +83,15 @@ class TwsFile:
     def load_from_image(self, image: Image.Image):
         new_image = b""
 
-        if self.data_format == FORMAT_RGB:
-            new_image = image.convert("RGB").tobytes("raw", "RGB")
+        if self.data_format == FORMAT_BGR:
+            new_image = image.convert("RGB").tobytes("raw", "BGR")
         elif self.data_format == FORMAT_RGBA:
             new_image = image.convert("RGBA").tobytes("raw", "RGBA")
         elif self.data_format == FORMAT_BC1:
             new_image = self.encode_bc1(
                 image.convert("RGBA").tobytes("raw", "RGBA"), self.width, self.height
             )
-        elif self.data_format == FORMAT_BC3 or self.data_format == FORMAT_BC3_2:
+        elif self.data_format == FORMAT_BC3_LIKE or self.data_format == FORMAT_BC3:
             mipmap_level = 0
             mipmap_width = self.width
             mipmap_height = self.height
@@ -126,7 +126,7 @@ class TwsFile:
 
         max_mipmap_level = 0
 
-        if data_format == FORMAT_RGB:
+        if data_format == FORMAT_BGR:
             expected_size = width * height * 3
             if len(image_data) != expected_size:
                 raise ValueError(
@@ -144,7 +144,7 @@ class TwsFile:
                 raise ValueError(
                     f"Invalid image data size for FORMAT_BC1: {len(image_data)} / {expected_size}"
                 )
-        elif data_format == FORMAT_BC3 or data_format == FORMAT_BC3_2:
+        elif data_format == FORMAT_BC3_LIKE or data_format == FORMAT_BC3:
             mipmap_level = 0
             mipmap_width = width
             mipmap_height = height
