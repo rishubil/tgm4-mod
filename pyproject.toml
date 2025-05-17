@@ -1,0 +1,24 @@
+[project]
+name = "tgm4-mod"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numba>=0.61.2",
+    "numpy>=2.2.5",
+    "pillow>=11.2.1",
+    "quicktex>=0.3.1",
+    "tqdm>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.10",
+]
+
+[tool.ruff.lint]
+# Enable isort (`I`).
+extend-select = ["I"]
+# Disable fix for unused imports (`F401`) and unused variables (`F841`).
+unfixable = ["F401", "F841"]

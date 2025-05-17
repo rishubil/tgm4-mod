@@ -1,0 +1,4 @@
+.vscode/
+resources/
+__pycache__/
+*.py[cod]
