@@ -34,7 +34,7 @@ def pack(info_path, original_extract_dir, extract_dir, output_dir):
     with open(new_game_path, "wb") as new_game_file:
         with tqdm(total=info_dat.file_count, desc="Packing files") as pbar:
             for entry in info_dat.entries:
-                pbar.set_postfix_str(f"Packing: {entry.name}")
+                pbar.set_postfix_str(f"Packing: {entry.name:<32}")
 
                 original_file_path = os.path.join(original_extract_dir, entry.name)
                 new_file_path = os.path.join(extract_dir, entry.name)
