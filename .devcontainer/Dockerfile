@@ -15,15 +15,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN adduser ubuntu sudo
 
-RUN mkdir -p /project/tmg4-mod && chown -R ubuntu:ubuntu /project
+RUN mkdir -p /project/tgm4-mod && chown -R ubuntu:ubuntu /project
 
 COPY --from=ghcr.io/astral-sh/uv:0.7.4 /uv /uvx /bin/
 ENV UV_PROJECT_ENVIRONMENT /project/.venv
 
 USER ubuntu
-WORKDIR /project/tmg4-mod
+WORKDIR /project/tgm4-mod
 
-ADD pyproject.toml uv.lock /project/tmg4-mod
+ADD pyproject.toml uv.lock /project/tgm4-mod
 
 RUN uv sync --locked
 
