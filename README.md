@@ -7,6 +7,9 @@ A modding tool that allows you to unpack, modify, and repack TGM4 game files. Th
 > It is not affiliated with or endorsed by the original developers.  
 > Use at your own risk.
 
+You can check out the mod created with this tool here:
+- [KONOHA Hololive](https://github.com/yf-dev/tgm4-konoha-hololive)
+
 ## Usage
 
 ### Prerequisites
